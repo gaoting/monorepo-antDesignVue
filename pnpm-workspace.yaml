@@ -1,0 +1,7 @@
+packages:
+  # packages下的直接子目录
+  - 'packages/*'
+  # components下的所有递归子目录
+  - 'components/**'
+  # 排除test目录
+  - '!**/test/**'

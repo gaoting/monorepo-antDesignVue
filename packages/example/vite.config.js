@@ -7,9 +7,6 @@ import AutoImport from "unplugin-auto-import/vite";
 // 组件自动按需导入
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 import Components from "unplugin-vue-components/vite";
-import {
-  AntDesignVueResolver
-} from 'unplugin-vue-components/resolvers'
 // 自动导入图像，同级目录的文件名不能重复！
 import ViteImages from "vite-plugin-vue-images";
 // setup语法糖name增强，使vue3语法糖支持name属性。vue3语法糖默认是没有name属性的，在我们使用keep-alive的时候需要用到name。
@@ -28,6 +25,10 @@ export default defineConfig({
     vue(),
     //自动引入vue的ref、toRefs、onmounted等，无需在页面中再次引入
     AutoImport({
+      dts: "src/auto-import.d.ts",
+      eslintrc: {
+        enabled: true,
+      },
       include: [
         /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
         /\.vue$/,
@@ -62,9 +63,9 @@ export default defineConfig({
     }),
     // 自动导入组件
     Components({
-     globs: ['components', 'packages'],
+      globs: ["*.{vue}"],
       resolvers: [
-        AntDesignVueResolver({ importStyle: false, resolveIcons: true }),
+        AntDesignVueResolver({ importStyle: true, resolveIcons: true }),
       ],
     }),
     // vite自动重启
@@ -83,7 +84,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": pathResolve("./components"),
+      "@": pathResolve("./../../components/"),
     },
   },
   optimizeDeps: {

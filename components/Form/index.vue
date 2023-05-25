@@ -9,23 +9,18 @@
     @finishFailed="onFinishFailed"
   >
     <a-form-item
-      label="Username"
-      name="username"
-      :rules="[{ required: true, message: 'Please input your username!' }]"
+      v-for="(item, i) in formArr"
+      :key="i"
+      label="item.label"
+      name="item.name"
+      :rules="[
+        {
+          required:  item.rulesOpen || false,
+          message: item.rulesOpen ? item.validateMsg || rulesMsg(item.type) : "",
+        },
+      ]"
     >
       <a-input v-model:value="formState.username" />
-    </a-form-item>
-
-    <a-form-item
-      label="Password"
-      name="password"
-      :rules="[{ required: true, message: 'Please input your password!' }]"
-    >
-      <a-input-password v-model:value="formState.password" />
-    </a-form-item>
-
-    <a-form-item name="remember" :wrapper-col="{ offset: 8, span: 16 }">
-      <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
     </a-form-item>
 
     <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
@@ -33,18 +28,36 @@
     </a-form-item>
   </a-form>
 </template>
+
 <script lang="ts" setup>
-interface FormState {
-  username: string;
-  password: string;
-  remember: boolean;
-}
+import { reactive } from "vue";
+import { FormState, FormArrayType } from "./props";
 
 const formState = reactive<FormState>({
   username: "",
   password: "",
   remember: true,
 });
+
+const rulesMsg = (type) => {
+  let str = ''
+  switch (type) {
+    case 'input':
+    str ='请输入'
+      break;
+
+    case 'select':
+    str = '请选择'
+      break;
+  
+    default:
+    str = ''
+      break;
+  }
+  return str
+}
+
+const formArr = reactive<FormArrayType[]>([])
 
 const onFinish = (values: any) => {
   console.log("Success:", values);
@@ -55,6 +68,4 @@ const onFinishFailed = (errorInfo: any) => {
 };
 </script>
 
-<style lang="scss" scoped>
-  
-</style>
+<style lang="scss" scoped></style>
